@@ -5,7 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XML Tag Processor</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script>
+        // Register Chart.js DataLabels plugin
+        Chart.register(ChartDataLabels);
+        
+        // Global Chart.js configuration for better rendering quality
+        Chart.defaults.font.family = "'Roboto', sans-serif";
+        Chart.defaults.font.size = 14;
+        Chart.defaults.font.weight = '500';
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+        Chart.defaults.plugins.tooltip.titleFont = {
+            family: "'Roboto', sans-serif",
+            size: 14,
+            weight: '500'
+        };
+        Chart.defaults.plugins.tooltip.bodyFont = {
+            family: "'Roboto', sans-serif",
+            size: 14
+        };
+        Chart.defaults.plugins.legend.labels.font = {
+            family: "'Roboto', sans-serif",
+            size: 14,
+            weight: '500'
+        };
+        Chart.defaults.plugins.legend.labels.padding = 20;
+        Chart.defaults.devicePixelRatio = 2; // Improve rendering quality
+        Chart.defaults.plugins.datalabels = {
+            color: '#ffffff',
+            font: {
+                weight: 'bold'
+            }
+        };
+    </script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -17,11 +52,13 @@
             position: relative;
         }
 
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
+
 
         .header {
             text-align: center;
@@ -30,12 +67,14 @@
             position: relative;
         }
 
+
         .header-left {
             position: absolute;
             left: 0;
             top: 50%;
             transform: translateY(-50%);
         }
+
 
         .header-right {
             position: absolute;
@@ -45,12 +84,14 @@
             display: none;
         }
 
+
         .header h1 {
             margin: 0;
             font-size: 2.5em;
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
+
 
         .header h2 {
             margin: 0;
@@ -59,23 +100,41 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+
         .header p {
             margin: 10px 0 0;
             color: #e3f2fd;
             font-size: 1.1em;
         }
 
-        .header-left h2 {
-            color: #ff0000; /* Red text color */
+
+        .header-left {
+            display: inline-block; /* Ensures both texts stay together */
             background-color: white; /* White background */
-            display: inline-block; /* Ensures background only covers the text */
-            padding: 5px 10px; /* Adds some spacing around the text */
-            font-size: 1.8em;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            border-radius: 5px; /* Optional: Adds rounded corners */
+            padding: 10px 20px; /* Adds spacing around the text */
+            border-radius: 5px; /* Optional: Rounded corners */
+            text-align: center; /* Align text centrally */
         }
         
+        .header-left h2, .header-left h3 {
+            display: block; /* Ensures they appear one below the other */
+            font-size: 1.5em; /* Same size for both */
+            font-weight: bold;
+            margin: 0; /* Removes extra spacing */
+            line-height: 1;
+        }
+        
+        .header-left h2 {
+            color: #ff0000; /* Red color for BSES */
+        }
+        
+        .header-left h3 {
+            color: black; /* Black color for BSES Yamuna Power Limited */
+        }        
+        
+        
+        
+
 
         .upload-section {
             background: #353b48;  /* Slightly lighter gray */
@@ -88,21 +147,25 @@
             margin-bottom: 20px;
         }
 
+
         .upload-section:hover {
             background: #404b69;  /* Even lighter on hover */
             border-color: #90caf9;
         }
+
 
         .upload-section.dragover {
             background: #3949ab;
             border-color: #90caf9;
         }
 
+
         .upload-icon {
             font-size: 48px;
             color: #64b5f6;
             margin-bottom: 20px;
         }
+
 
         .file-list {
             margin-top: 20px;
@@ -113,11 +176,13 @@
             border-radius: 5px;
         }
 
+
         .file-counter {
             margin-top: 10px;
             font-size: 0.9em;
             color: #e3f2fd;
         }
+
 
         .file-item {
             background: rgba(255, 255, 255, 0.1);
@@ -131,10 +196,12 @@
             animation: fadeIn 0.3s ease;
         }
 
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
 
         .clear-files {
             background: #f44336;
@@ -148,9 +215,11 @@
             margin-top: 10px;
         }
 
+
         .clear-files:hover {
             background: #d32f2f;
         }
+
 
         .button {
             background: #3949ab;
@@ -164,14 +233,17 @@
             margin-top: 20px;
         }
 
+
         .button:hover {
             background: #5c6bc0;
         }
+
 
         .button:disabled {
             background: #9fa8da;
             cursor: not-allowed;
         }
+
 
         .progress-container {
             background: #353b48;
@@ -181,11 +253,13 @@
             border: 1px solid #404b69;
         }
 
+
         .progress-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
+
 
         .progress-bar {
             height: 10px;
@@ -194,12 +268,14 @@
             overflow: hidden;
         }
 
+
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #64b5f6, #90caf9);
             width: 0%;
             transition: width 0.3s ease;
         }
+
 
         .progress-status {
             display: flex;
@@ -208,6 +284,7 @@
             margin-top: 10px;
             color: #e3f2fd;
         }
+
 
         .spinner {
             width: 20px;
@@ -219,10 +296,12 @@
             margin-right: 10px;
         }
 
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
 
         .results-section {
             background: #353b48;  /* Match upload section */
@@ -235,9 +314,11 @@
             gap: 20px;
         }
 
+
         .results-table-container {
             width: 100%;
         }
+
 
         .graphs-container {
             display: flex;
@@ -247,6 +328,7 @@
             margin-top: 20px;
             justify-content: space-between;
         }
+
 
         .graph-container {
             flex: 1;
@@ -260,6 +342,7 @@
             margin-bottom: 20px;
         }
 
+
         .export-graph-container {
             flex: 1;
             min-width: 300px;
@@ -270,11 +353,13 @@
             margin-top: 20px;
         }
 
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
 
         th, td {
             padding: 12px;
@@ -282,16 +367,19 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+
         th {
             color: #e3f2fd;
             font-weight: 500;
         }
+
 
         .download-buttons {
             display: flex;
             gap: 10px;
             margin-top: 20px;
         }
+
 
         .error {
             background: #d32f2f;
@@ -301,16 +389,19 @@
             margin-top: 20px;
         }
 
+
         #progressChart {
             margin-top: 20px;
             height: 150px;
             width: 100%;
         }
 
+
         #faultyChart, #exportChart {
             width: 100%;
             height: 250px;
         }
+
 
         .export-button {
             background: #3498db;  /* Blue instead of green */
@@ -325,14 +416,17 @@
             width: 100%;
         }
 
+
         .export-button:hover {
             background: #2980b9;
         }
+
 
         .export-button:disabled {
             background: #cccccc;
             cursor: not-allowed;
         }
+
 
         .copy-notification {
             position: fixed;
@@ -346,6 +440,7 @@
             animation: fadeInOut 3s ease;
         }
 
+
         @keyframes fadeInOut {
             0% { opacity: 0; transform: translateY(20px); }
             20% { opacity: 1; transform: translateY(0); }
@@ -353,14 +448,103 @@
             100% { opacity: 0; transform: translateY(-20px); }
         }
 
+
         .footer {
             position: fixed;
             bottom: 20px;
             right: 20px;
             color: #ffffff;
-            font-size: 1.2em;
+            font-size: 1.5em;
             opacity: 0.9;
-            font-weight: 500;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+
+        .results-details {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .results-details h3 {
+            margin-top: 0;
+            color: #e3f2fd;
+        }
+        
+        #fileDetails {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        #fileDetails th {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        #fileDetails td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-correct {
+            color: #4CAF50;
+        }
+        
+        .status-faulty {
+            color: #f44336;
+        }
+
+
+        .export-section {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .export-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #e3f2fd;
+        }
+
+
+        .export-btn {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            width: calc(50% - 10px);
+            transition: background-color 0.3s ease;
+        }
+
+
+        .export-btn:hover {
+            background-color: #45a049;
+        }
+
+
+        .export-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+
+        #export-status {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
@@ -369,6 +553,7 @@
         <div class="header">
             <div class="header-left">
                 <h2>BSES</h2>
+                <h3>BSES Yamuna Power Limited</h3>
             </div>
             <h1>XML-TAG STATUS</h1>
             <div class="header-right">
@@ -376,16 +561,18 @@
             </div>
         </div>
 
+
         <div class="upload-section" id="dropZone">
             <div class="upload-icon">📁</div>
-            <h2>Drag and drop multiple XML files here</h2>
-            <p>or click to select files</p>
+            <h2>Drag and Drop Multiple XML Files Here</h2>
+            <p>or Click To Select Files</p>
             <input type="file" id="fileInput" accept=".xml" multiple style="display: none;">
             <div class="file-list" id="fileList"></div>
             <div class="file-counter" id="fileCounter"></div>
             <button class="clear-files" id="clearFiles" style="display: none;">Clear All Files</button>
             <button class="button" id="processButton" disabled>Process Files</button>
         </div>
+
 
         <div class="progress-container" id="progressContainer" style="display: none;">
             <div class="progress-header">
@@ -402,7 +589,9 @@
             <canvas id="progressChart"></canvas>
         </div>
 
+
         <div class="error" id="error" style="display: none;"></div>
+
 
         <div class="results-section" id="results" style="display: none;">
             <div class="results-table-container">
@@ -419,7 +608,22 @@
                         </tr>
                     </tbody>
                 </table>
-                <button class="export-button" id="exportButton">Export XML Paths to CSV</button>
+                <div class="results-details">
+                    <h3>File Details</h3>
+                    <table id="fileDetails">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Meter Number</th>
+                                <th>Status</th>
+                                <th>Missing Tags</th>
+                                <th>Tag Values</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fileDetailsBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="graphs-container">
                 <div class="graph-container">
@@ -431,12 +635,24 @@
                     <canvas id="exportChart"></canvas>
                 </div>
             </div>
+            
+            <div class="export-container">
+                <div class="export-section">
+                    <h3>Export Options</h3>
+                    <button id="export-btn" class="export-btn" disabled>Export Faulty Files to CSV</button>
+                    <button id="export-normal-btn" class="export-btn" disabled>Export Normal Files to CSV</button>
+                    <span id="export-status"></span>
+                </div>
+            </div>
         </div>
+
 
         <div class="copy-notification" id="copyNotification">XML paths copied to clipboard!</div>
     </div>
 
-    <div class="footer">Developed by Analytics Dept</div>
+
+    <div class="footer">Developed by BYPL Analytics</div>
+
 
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -450,7 +666,7 @@
         const resultsSection = document.getElementById('results');
         const totalProcessed = document.getElementById('totalProcessed');
         const faultyFiles = document.getElementById('faultyFiles');
-        const exportButton = document.getElementById('exportButton');
+        const exportBtn = document.getElementById('export-btn');
         const copyNotification = document.getElementById('copyNotification');
         let selectedFiles = [];
         let progressChart = null;
@@ -459,6 +675,7 @@
         let isProcessing = false;
         const clearFiles = document.getElementById('clearFiles');
         const fileCounter = document.getElementById('fileCounter');
+
 
         function updateFileCounter() {
             if (selectedFiles.length > 0) {
@@ -470,6 +687,7 @@
             }
         }
 
+
         // Handle file selection
         dropZone.addEventListener('click', (e) => {
             if (!isProcessing) {
@@ -477,11 +695,13 @@
             }
         });
 
+
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFiles(Array.from(e.target.files));
             }
         });
+
 
         // Handle drag and drop
         dropZone.addEventListener('dragover', (e) => {
@@ -491,9 +711,11 @@
             }
         });
 
+
         dropZone.addEventListener('dragleave', () => {
             dropZone.classList.remove('dragover');
         });
+
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
@@ -506,6 +728,7 @@
             }
         });
 
+
         function handleFiles(files) {
             const xmlFiles = files.filter(file => file.name.toLowerCase().endsWith('.xml'));
             if (xmlFiles.length === 0) {
@@ -513,30 +736,31 @@
                 return;
             }
 
+
             // Add new files to existing selection
             selectedFiles = [...new Set([...selectedFiles, ...xmlFiles])];
             
             fileList.innerHTML = selectedFiles.map(file => `
                 <div class="file-item">
                     <span>${file.name}</span>
-                    <span class="remove-file" onclick="removeFile('${file.name}')">×</span>
+                    <span class="remove-file" 0nclick="removeFile('${file.name}')">×</span>
                 </div>
             `).join('');
             
             processButton.disabled = false;
-            exportButton.disabled = false;
             document.getElementById('error').style.display = 'none';
             updateFileCounter();
         }
+
 
         clearFiles.addEventListener('click', () => {
             if (isProcessing) return;
             selectedFiles = [];
             fileList.innerHTML = '';
             processButton.disabled = true;
-            exportButton.disabled = true;
             updateFileCounter();
         });
+
 
         function removeFile(fileName) {
             if (isProcessing) return;
@@ -544,19 +768,20 @@
             fileList.innerHTML = selectedFiles.map(file => `
                 <div class="file-item">
                     <span>${file.name}</span>
-                    <span class="remove-file" onclick="removeFile('${file.name}')">×</span>
+                    <span class="remove-file" 0nclick="removeFile('${file.name}')">×</span>
                 </div>
             `).join('');
             processButton.disabled = selectedFiles.length === 0;
-            exportButton.disabled = selectedFiles.length === 0;
             updateFileCounter();
         }
+
 
         function showError(message) {
             const error = document.getElementById('error');
             error.textContent = message;
             error.style.display = 'block';
         }
+
 
         // Initialize progress chart
         function initProgressChart() {
@@ -583,23 +808,58 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 100,
+                           max: 100,
                             ticks: {
-                                stepSize: 20
+                                stepSize: 20,
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 14,
+                                    weight: '500'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 14,
+                                    weight: '500'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            titleFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14,
+                                weight: '500'
+                            },
+                            bodyFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14
+                            }
                         }
                     },
                     animation: {
                         duration: 0 // Disable animations for better performance
-                    }
+                    },
+                    devicePixelRatio: 2 // Improve rendering quality
                 }
             });
         }
+
 
         // Initialize faulty files chart
         function initFaultyChart(totalFiles, faultyFiles) {
@@ -631,16 +891,35 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: '#ffffff'
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            titleFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14,
+                                weight: '500'
+                            },
+                            bodyFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14
                             }
                         }
                     },
                     animation: {
                         duration: 0 // Disable animations for better performance
-                    }
+                    },
+                    devicePixelRatio: 2 // Improve rendering quality
                 }
             });
         }
+
 
         // Initialize export analysis chart
         function initExportChart(totalFiles, faultyFiles, exportStatus = null) {
@@ -690,6 +969,7 @@
                 };
             }
 
+
             exportChart = new Chart(ctx, {
                 type: 'bar',
                 data: chartData,
@@ -701,7 +981,12 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
-                                color: '#ffffff'
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 14,
+                                    weight: '500'
+                                }
                             },
                             grid: {
                                 color: 'rgba(255, 255, 255, 0.1)'
@@ -709,7 +994,12 @@
                         },
                         x: {
                             ticks: {
-                                color: '#ffffff'
+                                color: '#ffffff',
+                                font: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 14,
+                                    weight: '500'
+                                }
                             },
                             grid: {
                                 color: 'rgba(255, 255, 255, 0.1)'
@@ -719,21 +1009,164 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            titleFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14,
+                                weight: '500'
+                            },
+                            bodyFont: {
+                                family: "'Roboto', sans-serif",
+                                size: 14
+                            }
+                        },
+                        datalabels: {
+                            color: '#ffffff',
+                            anchor: 'end',
+                            align: 'top',
+                            offset: 0,
+                            font: {
+                                family: "'Roboto', sans-serif",
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            formatter: (value) => value
                         }
                     },
                     animation: {
                         duration: 0
-                    }
+                    },
+                    devicePixelRatio: 2 // Improve rendering quality
                 }
             });
         }
 
+
+        // Handle export button click
+        document.getElementById('export-btn').addEventListener('click', async () => {
+            const exportBtn = document.getElementById('export-btn');
+            const exportStatus = document.getElementById('export-status');
+            
+            try {
+                const exportDir = prompt('Enter export directory path (or leave empty for default):', '');
+                
+                exportBtn.disabled = true;
+                exportStatus.textContent = 'Exporting faulty files to CSV...';
+                exportStatus.style.color = '#ffffff';
+                
+                const response = await fetch('/api/export-faulty', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ export_dir: exportDir })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    exportStatus.textContent = data.message;
+                    exportStatus.style.color = '#4CAF50';
+                    copyNotification.textContent = 'Faulty files exported successfully!';
+                    copyNotification.style.display = 'block';
+                    setTimeout(() => {
+                        copyNotification.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error(data.error || 'Export failed');
+                }
+            } catch (error) {
+                exportStatus.textContent = `Error: ${error.message}`;
+                exportStatus.style.color = '#f44336';
+            } finally {
+                exportBtn.disabled = false;
+            }
+        });
+
+
+        // Handle normal export button click
+        document.getElementById('export-normal-btn').addEventListener('click', async () => {
+            const exportNormalBtn = document.getElementById('export-normal-btn');
+            const exportStatus = document.getElementById('export-status');
+            
+            try {
+                const exportDir = prompt('Enter export directory path (or leave empty for default):', '');
+                
+                exportNormalBtn.disabled = true;
+                exportStatus.textContent = 'Exporting normal files to CSV...';
+                exportStatus.style.color = '#ffffff';
+                
+                const response = await fetch('/api/export-normal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ export_dir: exportDir })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    exportStatus.textContent = data.message;
+                    exportStatus.style.color = '#4CAF50';
+                    copyNotification.textContent = 'Normal files exported successfully!';
+                    copyNotification.style.display = 'block';
+                    setTimeout(() => {
+                        copyNotification.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error(data.error || 'Export failed');
+                }
+            } catch (error) {
+                exportStatus.textContent = `Error: ${error.message}`;
+                exportStatus.style.color = '#f44336';
+            } finally {
+                exportNormalBtn.disabled = false;
+            }
+        });
+
+
+        // Update export buttons state when processing completes
+        function updateExportButton(faultyCount, totalCount) {
+            const exportBtn = document.getElementById('export-btn');
+            const exportNormalBtn = document.getElementById('export-normal-btn');
+            const exportStatus = document.getElementById('export-status');
+            
+            if (faultyCount > 0) {
+                exportBtn.disabled = false;
+                exportStatus.textContent = `${faultyCount} faulty files ready to export`;
+                exportStatus.style.color = '#64b5f6';
+            } else {
+                exportBtn.disabled = true;
+                exportStatus.textContent = 'No faulty files to export';
+                exportStatus.style.color = '#9e9e9e';
+            }
+
+
+            const normalCount = totalCount - faultyCount;
+            if (normalCount > 0) {
+                exportNormalBtn.disabled = false;
+            } else {
+                exportNormalBtn.disabled = true;
+            }
+        }
+
+
+        // Update the event source handler
+        let eventSource;
+
+
         processButton.addEventListener('click', async () => {
             if (!selectedFiles || isProcessing) return;
 
+
             isProcessing = true;
             const formData = new FormData();
-            selectedFiles.forEach(file => formData.append('files', file));
+            selectedFiles.forEach(file => {
+                formData.append('files[]', file);
+            });
+
 
             // Reset UI
             progressContainer.style.display = 'block';
@@ -741,8 +1174,10 @@
             document.getElementById('error').style.display = 'none';
             processButton.disabled = true;
 
+
             // Initialize progress chart
             initProgressChart();
+
 
             try {
                 const response = await fetch('/api/process-xml', {
@@ -750,19 +1185,24 @@
                     body: formData
                 });
 
+
                 if (!response.ok) {
                     throw new Error('Processing failed');
                 }
 
+
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
+
 
                 while (true) {
                     const {value, done} = await reader.read();
                     if (done) break;
 
+
                     const chunk = decoder.decode(value);
                     const lines = chunk.split('\n');
+
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -772,6 +1212,7 @@
                                 showError(data.error);
                                 break;
                             }
+
 
                             if (data.progress !== undefined) {
                                 progressFill.style.width = `${data.progress}%`;
@@ -789,18 +1230,133 @@
                                     progressChart.data.datasets[0].data.shift();
                                 }
                                 
-                                progressChart.update('none'); // Use 'none' mode for better performance
+                                progressChart.update('none');
+
+
+                                // Update faulty count if available
+                                if (data.faulty_count !== undefined) {
+                                    updateExportButton(data.faulty_count, data.total_processed);
+                                }
                             }
 
+
                             if (data.complete) {
+                                // Update UI with results
                                 totalProcessed.textContent = data.total_processed;
                                 faultyFiles.textContent = data.faulty_files;
+                                
+                                // Update file details table
+                                const fileDetailsBody = document.getElementById('fileDetailsBody');
+                                fileDetailsBody.innerHTML = '';
+                                
+                                if (data.table_data && data.table_data.length > 0) {
+                                    data.table_data.forEach(file => {
+                                        const row = document.createElement('tr');
+                                        row.innerHTML = `
+                                            <td>${file.File}</td>
+                                            <td>${file.Meter}</td>
+                                            <td class="status-${file.Status.toLowerCase()}">${file.Status}</td>
+                                            <td>${file['Missing Tags']}</td>
+                                            <td>${file['Tag Values']}</td>
+                                        `;
+                                        fileDetailsBody.appendChild(row);
+                                    });
+                                }
+
+
+                                // Update export button state
+                                updateExportButton(data.faulty_files, data.total_processed);
+                                
+                                // Show results and hide progress
                                 resultsSection.style.display = 'block';
                                 progressContainer.style.display = 'none';
+                                
+                                // Update charts if visualization data is available
+                                if (data.visualization) {
+                                    try {
+                                        const vizData = JSON.parse(data.visualization);
+                                        if (vizData.charts) {
+                                            // Update faulty chart
+                                            const faultyChartData = vizData.charts.faultyChart;
+                                            if (faultyChart) {
+                                                faultyChart.destroy();
+                                            }
+                                            const faultyCtx = document.getElementById('faultyChart').getContext('2d');
+                                            faultyChart = new Chart(faultyCtx, {
+                                                type: faultyChartData.type,
+                                                data: faultyChartData.data,
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    plugins: {
+                                                        legend: {
+                                                            position: 'bottom',
+                                                            labels: { color: '#ffffff' }
+                                                        }
+                                                    }
+                                                }
+                                            });
 
-                                // Initialize both charts with the final data
-                                initFaultyChart(parseInt(data.total_processed), parseInt(data.faulty_files));
-                                initExportChart(parseInt(data.total_processed), parseInt(data.faulty_files));
+
+                                            // Update export chart
+                                            const exportChartData = vizData.charts.exportChart;
+                                            if (exportChart) {
+                                                exportChart.destroy();
+                                            }
+                                            const exportCtx = document.getElementById('exportChart').getContext('2d');
+                                            exportChart = new Chart(exportCtx, {
+                                                type: exportChartData.type,
+                                                data: exportChartData.data,
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            ticks: { color: '#ffffff' },
+                                                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                                        },
+                                                      x: {
+                                                            ticks: { color: '#ffffff' },
+                                                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                                        }
+                                                    },
+                                                    plugins: {
+                                                        legend: { display: false },
+                                                        tooltip: {
+                                                            enabled: true,
+                                                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                            titleFont: {
+                                                                family: "'Roboto', sans-serif",
+                                                                size: 14
+                                                            },
+                                                            bodyFont: {
+                                                                family: "'Roboto', sans-serif",
+                                                                size: 14
+                                                            }
+                                                        },
+                                                        datalabels: {
+                                                            color: '#ffffff',
+                                                            anchor: 'end',
+                                                            align: 'top',
+                                                            offset: 0,
+                                                            font: {
+                                                                family: "'Roboto', sans-serif",
+                                                                size: 14,
+                                                                weight: 'bold'
+                                                            },
+                                                            formatter: (value) => value
+                                                        }
+                                                    }
+                                                },
+                                                plugins: [ChartDataLabels]
+                                            });
+                                        }
+                                    } catch (error) {
+                                        console.error('Error updating charts:', error);
+                                    }
+                                }
+
 
                                 processButton.disabled = false;
                                 isProcessing = false;
@@ -812,48 +1368,6 @@
                 showError('An error occurred while processing the files: ' + error.message);
                 processButton.disabled = false;
                 isProcessing = false;
-            }
-        });
-
-        // Export XML paths to CSV
-        exportButton.addEventListener('click', async () => {
-            if (!selectedFiles || selectedFiles.length === 0) return;
-
-            try {
-                const response = await fetch('/api/export-xml-paths', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        files: selectedFiles.map(file => file.name)
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Export failed');
-                }
-
-                const data = await response.json();
-                if (data.success) {
-                    // Show success notification
-                    copyNotification.textContent = 'XML paths exported successfully!';
-                    copyNotification.style.display = 'block';
-                    setTimeout(() => {
-                        copyNotification.style.display = 'none';
-                    }, 3000);
-
-                    // Update export chart to show success
-                    initExportChart(parseInt(totalProcessed.textContent), parseInt(faultyFiles.textContent), {
-                        success: true
-                    });
-                }
-            } catch (error) {
-                showError('Failed to export XML paths: ' + error.message);
-                // Update export chart to show failure
-                initExportChart(parseInt(totalProcessed.textContent), parseInt(faultyFiles.textContent), {
-                    success: false
-                });
             }
         });
     </script>
